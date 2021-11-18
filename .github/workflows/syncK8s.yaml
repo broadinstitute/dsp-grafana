@@ -32,9 +32,9 @@ jobs:
       - name: Prepare cluster authentication
         uses: google-github-actions/get-gke-credentials@v0.4.0
         with:
-          cluster_name: ${{ env.GRAFANA_CLUSTER_GOOGLE_PROJECT }}
-          location: ${{ env.GRAFANA_CLUSTER_NAME }}
-          project_id: ${{ env.GRAFANA_CLUSTER_LOCATION }}
+          project_id: ${{ env.GRAFANA_CLUSTER_GOOGLE_PROJECT }}
+          cluster_name: ${{ env.GRAFANA_CLUSTER_NAME }}
+          location: ${{ env.GRAFANA_CLUSTER_LOCATION }}
           use_auth_provider: true
 
       - name: Bump repo tag
