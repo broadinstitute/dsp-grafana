@@ -1,0 +1,54 @@
+name: Sync to Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  # Details of the cluster containing Grafana
+  GRAFANA_CLUSTER_GOOGLE_PROJECT: dsp-tools-k8s
+  GRAFANA_CLUSTER_NAME: dsp-tools
+  GRAFANA_CLUSTER_LOCATION: us-central1-a
+
+jobs:
+  sync-to-kubernetes:
+    runs-on: self-hosted
+    steps:
+      #
+      # Setup
+      #
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Authenticate to GCP
+        uses: 'google-github-actions/auth@v0.4.0'
+        with:
+          credentials_json: ${{ secrets.GCP_ACCESS_KEY_B64 }}
+
+      - name: Prepare cluster authentication
+        uses: google-github-actions/get-gke-credentials@v0.4.0
+        with:
+          cluster_name: ${{ env.GRAFANA_CLUSTER_GOOGLE_PROJECT }}
+          location: ${{ env.GRAFANA_CLUSTER_NAME }}
+          project_id: ${{ env.GRAFANA_CLUSTER_LOCATION }}
+          use_auth_provider: true
+
+      - name: Bump repo tag
+        uses: databiosphere/github-actions/actions/bumper@bumper-0.0.3
+        env:
+          DEFAULT_BUMP: patch
+          GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
+          RELEASE_BRANCHES: main
+          WITH_V: true
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v11.5
+        with:
+          files: \.json(\.ctmpl)?$
+          
+      
