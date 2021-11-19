@@ -1,0 +1,1 @@
+This is a stub file to keep the directory around. It'll probably contain info in the future once we have some notification channels.
