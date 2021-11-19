@@ -113,8 +113,8 @@ jobs:
       - name: Restart grafana
         if: steps.sync-datasources.outputs.did_change == 'true' || steps.sync-notifiers.outputs.did_change == 'true'
         run: |
-          kubectl rollout restart --namespace ${{ DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
-          kubectl rollout status --namespace ${{ DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
+          kubectl rollout restart --namespace ${{ env.DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
+          kubectl rollout status --namespace ${{ env.DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
 
           
       
