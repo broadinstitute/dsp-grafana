@@ -1,0 +1,101 @@
+name: Sync One Data Type
+description: Syncs files for one Grafana data type (dashboards, datasources, or notifiers) to Kubernetes
+inputs:
+  directory:
+    description: Directory in this repo to use as the file root
+    required: true
+  target_namespace:
+    description: Namespace in Kubernetes where data type files should be synced
+    required: true
+  label:
+    description: Label for Kubernetes resources so they'll be correctly identified by Grafana
+    required: true
+  directory_annotation:
+    description: Annotation to put the relative directory in
+    required: false
+    default: k8s-sidecar-target-directory
+  name_generator:
+    description: Bash pipe sequence to generate names with
+    required: false
+    # Grabbed from https://gist.github.com/oneohthree/f528c7ae1e701ad990e6, not perfect but does the job
+    default: '| iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | sed -r s/^-+//g | sed -r s/-+$//g | tr A-Z a-z'
+outputs:
+  did_change:
+    description: If the synchronization changed any resources in Kubernetes
+    value: ${{ steps.sync-to-kubernetes.outputs.did_change }}
+runs:
+  using: "composite"
+  steps:
+    - name: Create manifests folder
+      shell: bash
+      run: mkdir ${{ inputs.directory }}/.manifests
+
+    - name: Create ConfigMaps from .json files
+      shell: bash
+      run: |
+        pushd ${{ inputs.directory }}
+
+        # Custom loop with GNU `find -print0` to handle spaces in paths
+        while IFS='' read -r -d '' filepath; do
+          directory=$(dirname "$filepath")
+          mkdir -p ".manifests/$directory"
+
+          resourcename=$(echo "$filepath" ${{ inputs.name_generator }})
+
+          kubectl create configmap $resourcename --from-file="$filepath" -o yaml --dry-run=client \
+            | kubectl label -f - --dry-run=client -o yaml --local ${{ inputs.label }}=true \
+            | kubectl annotate -f - --dry-run=client -o yaml --local ${{ inputs.directory_annotation }}="$directory" \
+            > ".manifests/$filepath.yaml"
+        done < <(find -name '*.json' -print0)
+
+        popd
+
+    - name: Create Secrets from .json.ctmpl files
+      shell: bash
+      run: |
+        pushd ${{ inputs.directory }}
+
+        # Custom loop with GNU `find -print0` to handle spaces in paths
+        while IFS='' read -r -d '' filepath; do
+          directory=$(dirname "$filepath")
+          mkdir -p ".manifests/$directory"
+
+          resourcename=$(echo "$filepath" ${{ inputs.name_generator }})
+
+          renderedpath="${filepath%.ctmpl}"
+          consul-template -once -template "$filepath:$renderedpath"
+
+          kubectl create secret generic $resourcename --from-file="$renderedpath" -o yaml --dry-run=client \
+            | kubectl label -f - --dry-run=client -o yaml --local ${{ inputs.label }}=true \
+            | kubectl annotate -f - --dry-run=client -o yaml --local ${{ inputs.directory_annotation }}="$directory" \
+            > ".manifests/$renderedpath.yaml"
+
+          rm $renderedpath
+        done < <(find -name '*.json.ctmpl' -print0)
+
+        popd
+
+    - name: Sync manifests to Kubernetes
+      shell: bash
+      id: sync-to-kubernetes
+      run: |
+        pushd ${{ inputs.directory }}
+
+        (kubectl apply -f .manifests --recursive --wait -n ${{ inputs.target_namespace }} --prune -l ${{ inputs.label }}=true || true) > .readout
+        cat .readout
+        echo "Errors in the above are expected if the account has limited RBAC permissions!"
+
+        if grep -Exq '.*(created|pruned)$' .readout; then
+          echo "::set-output name=did_change::true"
+        else
+          echo "::set-output name=did_change::false"
+        fi
+
+        popd
+
+    - name: Clean up
+      shell: bash
+      run: |
+        rm -rf ${{ inputs.directory }}/.manifests
+        rm ${{ inputs.directory }}/.readout
+
