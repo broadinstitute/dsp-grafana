@@ -10,11 +10,23 @@ env:
   GRAFANA_CLUSTER_GOOGLE_PROJECT: dsp-tools-k8s
   GRAFANA_CLUSTER_NAME: dsp-tools
   GRAFANA_CLUSTER_LOCATION: us-central1-a
+  # Vault details
+  VAULT_ADDR: https://clotho.broadinstitute.org:8200
+  # Grafana deployment details
+  DEPLOYMENT_NAME: dsp-grafana
+  DEPLOYMENT_NAMESPACE: grafana
+  DEPLOYMENT_DASHBOARDS_NAMESPACE: grafana-dashboards
+  DEPLOYMENT_DASHBOARDS_LABEL: grafana_dashboard
+  DEPLOYMENT_DATASOURCES_NAMESPACE: grafana-datasources
+  DEPLOYMENT_DATASOURCES_LABEL: grafana_datasource
+  DEPLOYMENT_NOTIFIERS_NAMESPACE: grafana-notifiers
+  DEPLOYMENT_NOTIFIERS_LABEL: grafana_notifier
 
 jobs:
   sync-to-kubernetes:
     runs-on: self-hosted
     steps:
+
       #
       # Setup
       #
@@ -22,7 +34,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 0
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
 
       - name: Authenticate to GCP
         uses: 'google-github-actions/auth@v0.4.0'
@@ -35,6 +50,30 @@ jobs:
           project_id: ${{ env.GRAFANA_CLUSTER_GOOGLE_PROJECT }}
           cluster_name: ${{ env.GRAFANA_CLUSTER_NAME }}
           location: ${{ env.GRAFANA_CLUSTER_LOCATION }}
+          # Long-lived authentication provider instead of a short-lived token
+          use_auth_provider: true
+
+      - name: Setup consul-template
+        uses: amendoa/action-setup-consul-template@v1
+        with:
+          version: 0.27.2
+
+      - name: Get a Vault token from approle
+        run: |
+          VAULT_TOKEN=$(curl \
+              --request POST \
+              --data "{\"role_id\":\"${{ secrets.VAULT_ROLE_ID }}\",\"secret_id\":\"${{ secrets.VAULT_SECRET_ID }}\"}" \
+              ${VAULT_ADDR}/v1/auth/approle/login | jq -r .auth.client_token)
+          if [ -z "${VAULT_TOKEN}" ] ; then
+            echo "Vault authentication failed!"
+            exit 1
+          fi
+          echo ::add-mask::${VAULT_TOKEN}
+          echo "VAULT_TOKEN=${VAULT_TOKEN}" >> $GITHUB_ENV
+
+      #
+      # Version
+      #
 
       - name: Bump repo tag
         uses: databiosphere/github-actions/actions/bumper@bumper-0.0.3
@@ -44,10 +83,38 @@ jobs:
           RELEASE_BRANCHES: main
           WITH_V: true
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v11.5
+      #
+      # Sync to Kubernetes
+      #
+
+      - name: Sync dashboards
+        uses: ./.github/actions/sync-one-data-type
         with:
-          files: \.json(\.ctmpl)?$
+          directory: ./dashboards
+          target_namespace: ${{ env.DEPLOYMENT_DASHBOARDS_NAMESPACE }}
+          label: ${{ env.DEPLOYMENT_DASHBOARDS_LABEL }}
+
+      - name: Sync datasources
+        id: sync-datasources
+        uses: ./.github/actions/sync-one-data-type
+        with:
+          directory: ./datasources
+          target_namespace: ${{ env.DEPLOYMENT_DATASOURCES_NAMESPACE }}
+          label: ${{ env.DEPLOYMENT_DATASOURCES_LABEL }}
+
+      - name: Sync notifiers
+        id: sync-notifiers
+        uses: ./.github/actions/sync-one-data-type
+        with:
+          directory: ./notifiers
+          target_namespace: ${{ env.DEPLOYMENT_NOTIFIERS_NAMESPACE }}
+          label: ${{ env.DEPLOYMENT_NOTIFIERS_LABEL }}
+
+      - name: Restart grafana
+        if: steps.sync-datasources.outputs.did_change == 'true' || steps.sync-notifiers.outputs.did_change == 'true'
+        run: |
+          kubectl rollout restart --namespace ${{ DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
+          kubectl rollout status --namespace ${{ DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
+
           
       
