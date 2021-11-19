@@ -1,4 +1,4 @@
-# dsp-grafana: Dashboards, Datasources, and Notification Channels
+# dsp-grafana: Dashboards, Datasources, and Notifers
 
 ## Looking to version-control your dashboards for [DSP's Grafana instance](https://grafana.dsp-devops.broadinstitute.org/)? Look no further.
 
