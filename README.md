@@ -16,7 +16,7 @@ For development work, the UI is your friend.
  - If they're new, create them in the UI and when you're done you can can get the "JSON Model" from the gear icon in the top right.
 - If they already exist, go ahead and edit like normal--when you click the save button you'll get a prompt with JSON you can copy.
 
-# How do we develop the Datasource or Notifier `.yaml` files?
+### How do we develop the Datasource or Notifier `.yaml` files?
 
 Ping DevOps for help, look inside those directories for more info--this process is hard and will probably require some usage of Grafana's underlying API to get the fields right.
 
