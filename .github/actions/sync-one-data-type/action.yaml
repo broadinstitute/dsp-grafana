@@ -30,7 +30,7 @@ runs:
       shell: bash
       run: mkdir ${{ inputs.directory }}/.manifests
 
-    - name: Create ConfigMaps from .json files
+    - name: Create ConfigMaps from .json and .yaml files
       shell: bash
       run: |
         pushd ${{ inputs.directory }}
@@ -46,11 +46,11 @@ runs:
             | kubectl label -f - --dry-run=client -o yaml --local ${{ inputs.label }}=true \
             | kubectl annotate -f - --dry-run=client -o yaml --local ${{ inputs.directory_annotation }}="$directory" \
             > ".manifests/$filepath.yaml"
-        done < <(find -name '*.json' -print0)
+        done < <(find \( -name '*.json' -o -name '*.yaml' \) -print0)
 
         popd
 
-    - name: Create Secrets from .json.ctmpl files
+    - name: Create Secrets from .json.ctmpl and .yaml.ctmpl files
       shell: bash
       run: |
         pushd ${{ inputs.directory }}
@@ -71,7 +71,7 @@ runs:
             > ".manifests/$renderedpath.yaml"
 
           rm $renderedpath
-        done < <(find -name '*.json.ctmpl' -print0)
+        done < <(find \( -name '*.json.ctmpl' -o -name '*.yaml.ctmpl' \) -print0)
 
         popd
 
