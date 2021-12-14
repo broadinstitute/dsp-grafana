@@ -13,6 +13,7 @@ datasources:
     orgId: 1
     # Specifying uid here keeps it consistent across edits
     uid: 8ZLL-_cnk
+    url: http://thanos-local-query.thanos.svc.cluster.local:9090
     isDefault: true
     jsonData:
       httpMethod: POST
