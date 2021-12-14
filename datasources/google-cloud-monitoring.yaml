@@ -1,0 +1,19 @@
+# Increment me each time you edit!
+apiVersion: 1
+
+deleteDatasources:
+  - name: Google Cloud Monitoring
+    orgId: 1
+
+datasources:
+  - name: Google Cloud Monitoring
+    type: stackdriver
+    typeName: Google Cloud Monitoring
+    access: proxy
+    orgId: 1
+    # Specifying uid here keeps it consistent across edits
+    uid: E3DK9e2na
+    jsonData:
+      authenticationType: gce
+    # Prevent UI edits
+    editable: false
