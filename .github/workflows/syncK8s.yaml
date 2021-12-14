@@ -116,6 +116,3 @@ jobs:
         run: |
           kubectl rollout restart deployment --namespace ${{ env.DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
           kubectl rollout status deployment --namespace ${{ env.DEPLOYMENT_NAMESPACE }} ${{ env.DEPLOYMENT_NAME }}
-
-          
-      
