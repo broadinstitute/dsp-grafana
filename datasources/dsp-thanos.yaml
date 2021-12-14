@@ -1,0 +1,20 @@
+# Increment me each time you edit!
+apiVersion: 1
+
+deleteDatasources:
+  - name: dsp-thanos
+    orgId: 1
+
+datasources:
+  - name: dsp-thanos
+    type: prometheus
+    typeName: Prometheus
+    access: proxy
+    orgId: 1
+    # Specifying uid here keeps it consistent across edits
+    uid: 8ZLL-_cnk
+    isDefault: true
+    jsonData:
+      httpMethod: POST
+    # Prevent UI edits
+    editable: false
