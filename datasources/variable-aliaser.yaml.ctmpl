@@ -1,0 +1,27 @@
+{{ with secret "secret/suitable/grafana/config/postgres/grafana-variable-aliases-db-creds" }}
+# Increment me each time you edit!
+apiVersion: 1
+
+deleteDatasources:
+  - name: Variable Aliaser
+    orgId: 1
+
+datasources:
+  - name: Variable Aliaser
+    type: postgres
+    typeName: PostgreSQL
+    access: proxy
+    orgId: 1
+    # Specifying uid here keeps it consistent across edits
+    uid: CsZ2InTnz
+    url: localhost:5433
+    user: {{ .Data.username }}
+    database: {{ .Data.db }}
+    jsonData:
+     postgresVersion: 1200
+     sslmode: disable
+    secureJsonData:
+      password: {{ .Data.password }}
+    # Prevent UI edits
+    editable: false
+{{ end }}
