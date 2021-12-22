@@ -369,7 +369,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "terra-prod",
           "value": "terra-prod"
         },
