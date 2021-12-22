@@ -22,7 +22,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "iteration": 1640183462026,
+  "iteration": 1640184456365,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -142,7 +142,7 @@
             "uid": "8ZLL-_cnk"
           },
           "exemplar": true,
-          "expr": "sum(sherlock_lead_time_to_environment{environment=\"$environment\",service!~\"agora|firecloudui\"}) / count(sherlock_lead_time_to_environment{environment=\"$environment\",service!~\"agora|firecloudui\"})",
+          "expr": "sum(sherlock_lead_time_to_environment{environment=\"$environment\",service!~\"agora|firecloudui|thurloe\"}) / count(sherlock_lead_time_to_environment{environment=\"$environment\",service!~\"agora|firecloudui|thurloe\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -369,7 +369,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "terra-prod",
           "value": "terra-prod"
         },
@@ -402,6 +402,6 @@
   "timezone": "",
   "title": "Terra",
   "uid": "hUZ3X92nk",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
