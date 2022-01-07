@@ -1,8 +1,8 @@
 # Increment me each time you edit!
-apiVersion: 2
+apiVersion: 3
 
 deleteDatasources:
-  - name: dsp-thanos
+  - name: Prometheus
     orgId: 1
 
 datasources:
