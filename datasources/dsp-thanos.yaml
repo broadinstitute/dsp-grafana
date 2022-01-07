@@ -1,12 +1,13 @@
 # Increment me each time you edit!
-apiVersion: 1
+apiVersion: 2
 
 deleteDatasources:
   - name: dsp-thanos
     orgId: 1
 
 datasources:
-  - name: dsp-thanos
+    # We call the dsp-thanos system 'Prometheus' to simplify the UX
+  - name: Prometheus
     type: prometheus
     typeName: Prometheus
     access: proxy
