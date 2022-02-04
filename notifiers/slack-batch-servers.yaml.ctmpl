@@ -1,13 +1,17 @@
 # Comments are steps to add a new Slack channel to Grafana.
 # 1. Add the 'DSP Grafana' app to your Slack channel
 # 2. Copy this file and rename the new one (one Slack channel per file)
+
+# 3. Set this to 1, and increment it each time this file is edited in the future
+apiVersion: 1
+
 notifiers:
-  - name: "Slack: #batch-servers" # 3. Come up with a new name
+  - name: "Slack: #batch-servers" # 4. Come up with a new name
     type: slack
-    uid: 8gP-00000 # 4. Come up with a new UID
+    uid: 8gP-00000 # 5. Come up with a new UID
     org_id: 1
     settings:
-      recipient: batch-servers # 5. Put your exact channel name here, no leading #
+      recipient: batch-servers # 6. Put your exact channel name here, no leading #
     secure_settings:
       token: {{ with secret "secret/suitable/grafana/config/slack/dsp_grafana" }}{{ .Data.bot_user_oauth_token }}{{ end }}
-# 6. PR in your added file!
+# 7. PR in your added file!
