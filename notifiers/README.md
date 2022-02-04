@@ -1,1 +1,3 @@
-This is a stub file to keep the directory around. It'll probably contain info in the future once we have some notification channels.
+## Slack
+
+To add a Slack notification channel, check out one of the files prefixed with `slack-`. There's comments on what to do (add the bot to your channel, copy the file, tweak a few values).
