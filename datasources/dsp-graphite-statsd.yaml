@@ -1,0 +1,21 @@
+# Increment me each time you edit!
+apiVersion: 2
+
+deleteDatasources:
+  - name: Graphite StatsD
+    orgId: 1
+
+datasources:
+  - name: Graphite StatsD
+    type: Graphite
+    typeName: Graphite
+    access: proxy
+    orgId: 1
+    # Specifying uid here keeps it consistent across edits
+    uid: HOxn8Xw7z
+    url: http://graphite-statsd-private-service.graphite-statsd:8080
+    isDefault: false
+    jsonData:
+      graphiteVersion: "1.1"
+    # Prevent UI edits
+    editable: false
