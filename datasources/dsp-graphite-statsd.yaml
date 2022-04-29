@@ -1,5 +1,5 @@
 # Increment me each time you edit!
-apiVersion: 2
+apiVersion: 4
 
 deleteDatasources:
   - name: Graphite StatsD
