@@ -7,7 +7,7 @@ deleteDatasources:
 
 datasources:
   - name: Graphite StatsD
-    type: Graphite
+    type: graphite
     typeName: Graphite
     access: proxy
     orgId: 1
