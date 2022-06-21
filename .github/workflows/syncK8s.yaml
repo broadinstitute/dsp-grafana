@@ -77,7 +77,7 @@ jobs:
       #
 
       - name: Bump repo tag
-        uses: databiosphere/github-actions/actions/bumper@bumper-0.0.3
+        uses: databiosphere/github-actions/actions/bumper@bumper-0.0.6
         env:
           DEFAULT_BUMP: patch
           GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
