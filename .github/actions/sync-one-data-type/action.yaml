@@ -26,6 +26,10 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Install the plugin
+      shell: bash
+      run: gcloud components install gke-gcloud-auth-plugin
+  
     - name: Create manifests folder
       shell: bash
       run: mkdir ${{ inputs.directory }}/.manifests
