@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -22,11 +25,34 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "iteration": 1647523009261,
   "links": [],
   "liveNow": false,
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "8ZLL-_cnk"
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "content": "# This dashboard is going away! \n\n# The newer replacement is available [here](https://grafana.dsp-devops.broadinstitute.org/d/Uh_BPk2Vz/v2-accelerate-metrics-per-environment)\n\nThe newer dashboard is based on Sherlock's newer API, letting DevOps eventually remove this one's older API so we can roll out features it isn't compatible with.\n\nFeel free to drop any feedback or suggestions in [#dsp-dashboards](https://broadinstitute.slack.com/archives/C02M64AJWGK)!",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.1.6",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "8ZLL-_cnk"
+      },
       "description": "The number of deploy events across all services in an environment over the past 7 days",
       "fieldConfig": {
         "defaults": {
@@ -50,7 +76,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 14
       },
       "id": 4,
       "options": {
@@ -67,7 +93,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.1",
+      "pluginVersion": "9.1.6",
       "targets": [
         {
           "datasource": {
@@ -85,6 +111,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "8ZLL-_cnk"
+      },
       "description": "Average lead time for a change to reach a given environment over the past 7 days",
       "fieldConfig": {
         "defaults": {
@@ -117,7 +147,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 14
       },
       "id": 6,
       "options": {
@@ -134,7 +164,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.1",
+      "pluginVersion": "9.1.6",
       "targets": [
         {
           "datasource": {
@@ -152,6 +182,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "8ZLL-_cnk"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -175,11 +209,13 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 22
       },
       "id": 8,
       "options": {
         "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -191,7 +227,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "8.3.1",
+      "pluginVersion": "9.1.6",
       "targets": [
         {
           "datasource": {
@@ -209,6 +245,10 @@
       "type": "bargauge"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "8ZLL-_cnk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -216,7 +256,8 @@
           },
           "custom": {
             "fillOpacity": 70,
-            "lineWidth": 0
+            "lineWidth": 0,
+            "spanNulls": false
           },
           "mappings": [],
           "thresholds": {
@@ -243,20 +284,22 @@
         "h": 12,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 32
       },
       "id": 10,
       "options": {
         "alignValue": "left",
         "legend": {
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "mergeValues": true,
         "rowHeight": 0.9,
         "showValue": "never",
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.3.1",
@@ -277,12 +320,18 @@
       "type": "state-timeline"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "8ZLL-_cnk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisGridShow": false,
             "axisLabel": "Lead Time",
             "axisPlacement": "auto",
@@ -330,7 +379,7 @@
         "h": 12,
         "w": 12,
         "x": 12,
-        "y": 18
+        "y": 32
       },
       "id": 12,
       "options": {
@@ -339,10 +388,12 @@
             "last"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -362,7 +413,7 @@
       "type": "timeseries"
     }
   ],
-  "schemaVersion": 33,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -372,6 +423,10 @@
           "selected": false,
           "text": "terra-prod",
           "value": "terra-prod"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "8ZLL-_cnk"
         },
         "definition": "label_values(sherlock_deploy_frequency, environment)",
         "hide": 0,
@@ -402,6 +457,6 @@
   "timezone": "",
   "title": "Terra",
   "uid": "hUZ3X92nk",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }
