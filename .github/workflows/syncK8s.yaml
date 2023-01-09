@@ -57,8 +57,6 @@ jobs:
           project_id: ${{ env.GRAFANA_CLUSTER_GOOGLE_PROJECT }}
           cluster_name: ${{ env.GRAFANA_CLUSTER_NAME }}
           location: ${{ env.GRAFANA_CLUSTER_LOCATION }}
-          # Long-lived authentication provider instead of a short-lived token
-          use_auth_provider: true
 
       - name: Setup consul-template
         uses: amendoa/action-setup-consul-template@v1
