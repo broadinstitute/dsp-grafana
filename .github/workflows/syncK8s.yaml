@@ -22,6 +22,7 @@ env:
   DEPLOYMENT_DATASOURCES_LABEL: grafana_datasource
   DEPLOYMENT_NOTIFIERS_NAMESPACE: grafana-notifiers
   DEPLOYMENT_NOTIFIERS_LABEL: grafana_notifier
+  USE_GKE_GCLOUD_AUTH_PLUGIN: true
 
 jobs:
   sync-to-kubernetes:
@@ -47,11 +48,8 @@ jobs:
           
       - name: Setup gcloud
         uses: 'google-github-actions/setup-gcloud@v1'
-          
-      - name: Setup GKE plugin
-        run: |
-          gcloud components install gke-gcloud-auth-plugin
-          gcloud --quiet auth configure-docker
+        with:
+          install_components: gke-gcloud-auth-plugin
 
       - name: Prepare cluster authentication
         uses: google-github-actions/get-gke-credentials@v0.4.0
