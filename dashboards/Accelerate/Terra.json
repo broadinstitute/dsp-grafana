@@ -41,7 +41,7 @@
       },
       "id": 14,
       "options": {
-        "content": "# This dashboard is going away! \n\n# The newer replacement is available [here](https://grafana.dsp-devops.broadinstitute.org/d/Uh_BPk2Vz/v2-accelerate-metrics-per-environment)\n\nThe newer dashboard is based on Sherlock's newer API, letting DevOps eventually remove this one's older API so we can roll out features it isn't compatible with.\n\nFeel free to drop any feedback or suggestions in [#dsp-dashboards](https://broadinstitute.slack.com/archives/C02M64AJWGK)!",
+        "content": "# This dashboard is going away! The data here should be considered inaccurate from January 12th 2023 onward.\n\n# The newer replacement is available [here](https://grafana.dsp-devops.broadinstitute.org/d/Uh_BPk2Vz/v2-accelerate-metrics-per-environment)\n\nThe newer dashboard is based on Sherlock's newer API, letting DevOps eventually remove this one's older API so we can roll out features it isn't compatible with.\n\nFeel free to drop any feedback or suggestions in [#dsp-dashboards](https://broadinstitute.slack.com/archives/C02M64AJWGK)!",
         "mode": "markdown"
       },
       "pluginVersion": "9.1.6",
@@ -264,8 +264,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "#EAB839",
@@ -366,8 +365,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -457,6 +455,6 @@
   "timezone": "",
   "title": "Terra",
   "uid": "hUZ3X92nk",
-  "version": 5,
+  "version": 6,
   "weekStart": ""
 }
